@@ -1,4 +1,4 @@
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 export type ApiError = {
   message: string;
@@ -13,7 +13,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
 };
 
 export const normalizeHttpError = (error: unknown): ApiError => {
-  if (axios.isAxiosError(error)) {
+  if (isAxiosError(error)) {
     const responseData = error.response?.data;
     const responseStatusCode = error.response?.status;
 
