@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { productQueryKeys } from "@/src/features/products/queries/query-keys";
 import { productRepository } from "@/src/features/products/repository/ProductRepository";
+import { storeQueryKeys } from "@/src/features/stores/queries/query-keys";
 import type {
   ProductInput,
   ProductUpdateInput,
@@ -16,9 +17,11 @@ export const useCreateProductMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (productInput: ProductInput) => productRepository.create(productInput),
+    mutationFn: (productInput: ProductInput) =>
+      productRepository.create(productInput),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: productQueryKeys.all });
+      void queryClient.invalidateQueries({ queryKey: storeQueryKeys.all });
     },
   });
 };
@@ -46,6 +49,7 @@ export const useDeleteProductMutation = () => {
     mutationFn: (productId: string) => productRepository.delete(productId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: productQueryKeys.all });
+      void queryClient.invalidateQueries({ queryKey: storeQueryKeys.all });
     },
   });
 };

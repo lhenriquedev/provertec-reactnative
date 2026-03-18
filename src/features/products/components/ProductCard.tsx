@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Pressable } from "react-native";
 
 import { Box } from "@/src/components/ui/box";
-import { Button, ButtonText } from "@/src/components/ui/button";
 import { Heading } from "@/src/components/ui/heading";
 import { HStack } from "@/src/components/ui/hstack";
 import { Text } from "@/src/components/ui/text";
@@ -39,79 +39,65 @@ export function ProductCard({
   onDelete,
 }: ProductCardProps) {
   return (
-    <Box className="rounded-[28px] border border-outline-200 bg-background-50 p-5">
-      <VStack className="gap-4">
-        <HStack className="items-start justify-between gap-3">
-          <HStack className="flex-1 gap-3">
-            <Box className="size-14 items-center justify-center rounded-2xl bg-tertiary-100">
-              <MaterialCommunityIcons
-                name={getCategoryIcon(product.category)}
-                size={22}
-                color="rgb(59 30 138)"
-              />
-            </Box>
-
-            <VStack className="flex-1 gap-2">
-              <HStack className="flex-wrap gap-2">
-                <RetailBadge
-                  label={product.category}
-                  tone="accent"
-                  className="border-tertiary-200 bg-tertiary-100"
-                  textClassName="normal-case tracking-normal"
-                />
-                <RetailBadge
-                  label={`SKU #${product.id}`}
-                  tone="neutral"
-                  textClassName="normal-case tracking-normal"
-                />
-              </HStack>
-
-              <VStack className="gap-1">
-                <Heading className="text-typography-950" size="md">
-                  {product.name}
-                </Heading>
-                <Text className="text-typography-600" size="sm">
-                  Item disponivel no catalogo desta loja.
-                </Text>
-              </VStack>
-            </VStack>
-          </HStack>
-
-          <RetailBadge label="Ativo" tone="success" />
-        </HStack>
-
-        <Box className="rounded-[24px] border border-tertiary-200 bg-tertiary-50 px-4 py-4">
-          <Text className="text-typography-500" size="sm">
-            Preco de venda
-          </Text>
-          <Heading className="mt-1 text-typography-950" size="xl">
-            {formatCurrency(product.price)}
-          </Heading>
+    <Pressable
+      className="rounded-2xl border border-outline-200 bg-background-0 p-3 active:opacity-90"
+      onPress={() => onOpenDetails(product)}
+    >
+      <HStack className="items-center gap-4">
+        <Box className="size-20 items-center justify-center rounded-xl bg-tertiary-100">
+          <MaterialCommunityIcons
+            name={getCategoryIcon(product.category)}
+            size={28}
+            color="rgb(59 30 138)"
+          />
         </Box>
 
-        <Button className="h-11 rounded-xl" onPress={() => onOpenDetails(product)}>
-          <ButtonText>Ver produto</ButtonText>
-        </Button>
+        <VStack className="flex-1 gap-2">
+          <Heading className="text-typography-950" size="sm">
+            {product.name}
+          </Heading>
 
-        <HStack className="gap-2">
-          <Button
-            variant="outline"
-            action="secondary"
-            className="h-11 flex-1 rounded-xl"
+          <HStack className="flex-wrap items-center gap-2">
+            <RetailBadge
+              label={product.category}
+              tone="accent"
+              className="border-tertiary-200 bg-tertiary-100"
+              textClassName="normal-case tracking-normal"
+            />
+            <Text className="text-typography-600" size="sm">
+              {formatCurrency(product.price)}
+            </Text>
+          </HStack>
+
+          <Text className="text-typography-500" size="xs">
+            {`SKU #${product.id}`}
+          </Text>
+        </VStack>
+
+        <VStack className="gap-2">
+          <Pressable
+            className="size-9 items-center justify-center rounded-lg bg-tertiary-50 active:opacity-80"
             onPress={() => onEdit(product)}
           >
-            <ButtonText>Editar</ButtonText>
-          </Button>
-          <Button
-            variant="outline"
-            action="negative"
-            className="h-11 flex-1 rounded-xl"
+            <MaterialCommunityIcons
+              name="pencil-outline"
+              size={20}
+              color="rgb(59 30 138)"
+            />
+          </Pressable>
+
+          <Pressable
+            className="size-9 items-center justify-center rounded-lg bg-error-50 active:opacity-80"
             onPress={() => onDelete(product)}
           >
-            <ButtonText>Excluir</ButtonText>
-          </Button>
-        </HStack>
-      </VStack>
-    </Box>
+            <MaterialCommunityIcons
+              name="trash-can-outline"
+              size={20}
+              color="rgb(225 29 72)"
+            />
+          </Pressable>
+        </VStack>
+      </HStack>
+    </Pressable>
   );
 }

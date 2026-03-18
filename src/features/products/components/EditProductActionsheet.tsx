@@ -1,7 +1,3 @@
-import { Box } from "@/src/components/ui/box";
-import { Button, ButtonSpinner, ButtonText } from "@/src/components/ui/button";
-import { Text } from "@/src/components/ui/text";
-import { VStack } from "@/src/components/ui/vstack";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -9,13 +5,15 @@ import {
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "@/src/components/ui/actionsheet";
+import { Button, ButtonSpinner, ButtonText } from "@/src/components/ui/button";
+import { Text } from "@/src/components/ui/text";
+import { VStack } from "@/src/components/ui/vstack";
 import { ProductForm } from "@/src/features/products/components/ProductForm";
 import { ProductSubmitError } from "@/src/features/products/components/ProductSubmitError";
 import {
   mapFormValuesToProductUpdateInput,
   useProductForm,
 } from "@/src/features/products/hooks/useProductForm";
-import { RetailBadge } from "@/src/shared/components/RetailBadge";
 import type {
   Product,
   ProductUpdateInput,
@@ -49,30 +47,19 @@ export function EditProductActionsheet({
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose}>
       <ActionsheetBackdrop className="bg-background-950/70" />
-      <ActionsheetContent className="rounded-t-[36px] border-outline-200 bg-background-0 px-0 pb-safe">
+      <ActionsheetContent className="border-outline-200 bg-background-0 px-0 pb-safe">
         <ActionsheetDragIndicatorWrapper className="pt-2">
           <ActionsheetDragIndicator className="w-20 bg-background-300" />
         </ActionsheetDragIndicatorWrapper>
 
         <VStack className="w-full gap-5 px-5 pb-6 pt-2">
-          <Box className="rounded-[28px] border border-tertiary-300 bg-tertiary-100 px-4 py-5">
-            <VStack className="gap-2">
-              <RetailBadge label="Editar produto" tone="accent" className="self-start" />
-              <Text bold className="text-typography-950" size="lg">
-                Revisar item do catalogo.
-              </Text>
-              <Text className="text-typography-700" size="sm">
-                {product ? `Atualize ${product.name} para refletir o catalogo real.` : "Atualize os dados do produto selecionado."}
-              </Text>
-            </VStack>
-          </Box>
-
           <VStack className="gap-2">
             <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
               Dados do produto
             </Text>
             <Text className="text-typography-600" size="sm">
-              Revise o cadastro para manter a leitura de preco e categoria consistente.
+              Revise o cadastro para manter a leitura de preco e categoria
+              consistente.
             </Text>
           </VStack>
 
@@ -85,9 +72,15 @@ export function EditProductActionsheet({
           <ProductSubmitError message={errorMessage} />
 
           <VStack className="gap-2">
-            <Button className="h-12 rounded-2xl" onPress={handleFormSubmit} isDisabled={isSubmitting}>
+            <Button
+              className="h-12 rounded-2xl"
+              onPress={handleFormSubmit}
+              isDisabled={isSubmitting}
+            >
               {isSubmitting ? <ButtonSpinner /> : null}
-              <ButtonText>{isSubmitting ? "Salvando..." : "Salvar alteracoes"}</ButtonText>
+              <ButtonText>
+                {isSubmitting ? "Salvando..." : "Salvar alteracoes"}
+              </ButtonText>
             </Button>
             <Button
               className="h-12 rounded-2xl"

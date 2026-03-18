@@ -4,8 +4,6 @@ import {
   FormControl,
   FormControlError,
   FormControlErrorText,
-  FormControlHelper,
-  FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
 } from "@/src/components/ui/form-control";
@@ -26,11 +24,7 @@ export function StoreForm({ control, errors, isDisabled }: StoreFormProps) {
         <FormControlLabel>
           <FormControlLabelText>Nome da loja</FormControlLabelText>
         </FormControlLabel>
-        <FormControlHelper>
-          <FormControlHelperText>
-            Esse nome aparece no dashboard, na rede e nas telas de produtos.
-          </FormControlHelperText>
-        </FormControlHelper>
+
         <Controller
           control={control}
           name="name"
@@ -60,11 +54,7 @@ export function StoreForm({ control, errors, isDisabled }: StoreFormProps) {
         <FormControlLabel>
           <FormControlLabelText>Endereco</FormControlLabelText>
         </FormControlLabel>
-        <FormControlHelper>
-          <FormControlHelperText>
-            Use um endereco curto e reconhecivel para facilitar a operacao.
-          </FormControlHelperText>
-        </FormControlHelper>
+
         <Controller
           control={control}
           name="address"
@@ -83,6 +73,7 @@ export function StoreForm({ control, errors, isDisabled }: StoreFormProps) {
             </Input>
           )}
         />
+
         {errors.address ? (
           <FormControlError>
             <FormControlErrorText>

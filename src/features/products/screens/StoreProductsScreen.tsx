@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Pressable, ScrollView } from "react-native";
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Box } from "@/src/components/ui/box";
@@ -23,11 +23,10 @@ import type {
 import { useStoreDetails } from "@/src/features/stores/hooks/useStores";
 import { EmptyState } from "@/src/shared/components/EmptyState";
 import { LoadingSpinner } from "@/src/shared/components/LoadingSpinner";
-import { MetricCard } from "@/src/shared/components/MetricCard";
-import { RetailBadge } from "@/src/shared/components/RetailBadge";
-import { formatCurrency } from "@/src/shared/utils/formatCurrency";
 
 import { getStoreErrorMessage } from "@/src/domain/stores/get-store-error-message";
+
+const ALL_CATEGORY_LABEL = "Todos";
 
 export function StoreProductsScreen() {
   const params = useLocalSearchParams<{ id?: string | string[] }>();
@@ -42,17 +41,38 @@ export function StoreProductsScreen() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY_LABEL);
 
   const store = storeQuery.data;
-  const products = productsQuery.data ?? [];
-  const averagePrice =
-    products.length > 0
-      ? products.reduce((total, product) => total + product.price, 0) /
-        products.length
-      : 0;
-  const premiumProduct = [...products].sort(
-    (left, right) => right.price - left.price,
-  )[0];
+  const products = useMemo(() => productsQuery.data ?? [], [productsQuery.data]);
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+  const categories = useMemo(
+    () => [
+      ALL_CATEGORY_LABEL,
+      ...Array.from(new Set(products.map((product) => product.category))).sort(
+        (left, right) => left.localeCompare(right),
+      ),
+    ],
+    [products],
+  );
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((product) => {
+        const matchesCategory =
+          activeCategory === ALL_CATEGORY_LABEL ||
+          product.category === activeCategory;
+        const matchesSearch =
+          normalizedSearchTerm.length === 0 ||
+          product.name.toLowerCase().includes(normalizedSearchTerm) ||
+          product.category.toLowerCase().includes(normalizedSearchTerm);
+
+        return matchesCategory && matchesSearch;
+      }),
+    [activeCategory, normalizedSearchTerm, products],
+  );
+  const hasActiveFilters =
+    normalizedSearchTerm.length > 0 || activeCategory !== ALL_CATEGORY_LABEL;
 
   const handleCreate = async (values: ProductInput) => {
     await createProductMutation.mutateAsync(values);
@@ -107,114 +127,86 @@ export function StoreProductsScreen() {
           <ScrollView
             stickyHeaderIndices={[0]}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 48 }}
+            contentContainerStyle={{ paddingBottom: 128 }}
           >
-            <Box className="border-b border-outline-100 bg-background-0 px-5 py-4">
-              <HStack className="items-center gap-3">
-                <Pressable
-                  className="size-10 items-center justify-center rounded-full bg-background-50 active:opacity-80"
-                  onPress={() => router.back()}
-                >
-                  <MaterialCommunityIcons
-                    name="arrow-left"
-                    size={22}
-                    color="rgb(15 23 42)"
-                  />
-                </Pressable>
+            <Box className="border-b border-outline-100 bg-background-0">
+              <VStack className="gap-4 px-5 py-4">
+                <HStack className="items-start gap-3">
+                  <Pressable
+                    className="mt-0.5 size-10 items-center justify-center rounded-full bg-background-50 active:opacity-80"
+                    onPress={() => router.back()}
+                  >
+                    <MaterialCommunityIcons
+                      name="arrow-left"
+                      size={22}
+                      color="rgb(59 30 138)"
+                    />
+                  </Pressable>
 
-                <VStack className="flex-1 gap-0.5">
-                  <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
-                    Catalogo da loja
-                  </Text>
-                  <Heading size="md">{store.name}</Heading>
-                </VStack>
-              </HStack>
+                  <VStack className="flex-1 gap-1">
+                    <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
+                      Catalogo da loja
+                    </Text>
+                    <Heading size="md">{`Produtos - ${store.name}`}</Heading>
+                    <Text className="text-typography-500" size="sm">
+                      {store.address}
+                    </Text>
+                  </VStack>
+                </HStack>
+
+                <HStack className="h-12 items-center rounded-xl bg-background-50 px-3">
+                  <MaterialCommunityIcons
+                    name="magnify"
+                    size={20}
+                    color="rgb(148 163 184)"
+                  />
+                  <TextInput
+                    value={searchTerm}
+                    onChangeText={setSearchTerm}
+                    placeholder="Buscar produto..."
+                    placeholderTextColor="rgb(148 163 184)"
+                    className="flex-1 px-2 text-sm text-typography-900"
+                    autoCorrect={false}
+                  />
+                </HStack>
+
+                {products.length > 0 ? (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ gap: 8, paddingRight: 4 }}
+                  >
+                    {categories.map((category) => {
+                      const isActive = activeCategory === category;
+
+                      return (
+                        <Pressable
+                          key={category}
+                          className={`h-9 items-center justify-center rounded-full px-5 ${
+                            isActive
+                              ? "bg-tertiary-700"
+                              : "bg-background-100"
+                          }`}
+                          onPress={() => setActiveCategory(category)}
+                        >
+                          <Text
+                            className={
+                              isActive ? "text-white" : "text-typography-700"
+                            }
+                            bold={isActive}
+                            size="sm"
+                          >
+                            {category}
+                          </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </ScrollView>
+                ) : null}
+              </VStack>
             </Box>
 
             <VStack className="gap-5 px-5 pb-8 pt-5">
-              <Box className="rounded-[32px] border border-tertiary-200 bg-background-50 px-5 py-5">
-                <VStack className="gap-5">
-                  <HStack className="items-center gap-4">
-                    <Box className="size-24 items-center justify-center rounded-[28px] bg-tertiary-100">
-                      <MaterialCommunityIcons
-                        name="shopping-outline"
-                        size={38}
-                        color="rgb(59 30 138)"
-                      />
-                    </Box>
-
-                    <VStack className="flex-1 gap-2">
-                      <VStack className="gap-1">
-                        <Heading size="lg">{store.name}</Heading>
-                        <HStack className="items-start gap-2">
-                          <MaterialCommunityIcons
-                            name="map-marker-outline"
-                            size={16}
-                            color="rgb(100 116 139)"
-                          />
-                          <Text
-                            className="flex-1 text-typography-600"
-                            size="sm"
-                          >
-                            {store.address}
-                          </Text>
-                        </HStack>
-                      </VStack>
-
-                      <HStack className="flex-wrap gap-2">
-                        <RetailBadge
-                          label={`${products.length} itens`}
-                          tone={products.length > 0 ? "accent" : "warning"}
-                          className={
-                            products.length > 0
-                              ? "border-tertiary-200 bg-tertiary-100"
-                              : undefined
-                          }
-                          textClassName="normal-case tracking-normal"
-                        />
-                        <RetailBadge
-                          label={
-                            products.length > 0
-                              ? "Catalogo ativo"
-                              : "Sem catalogo"
-                          }
-                          tone={products.length > 0 ? "success" : "warning"}
-                        />
-                      </HStack>
-                    </VStack>
-                  </HStack>
-
-                  <Button
-                    className="h-12 rounded-2xl"
-                    onPress={() => setIsCreateOpen(true)}
-                  >
-                    <ButtonText>Novo produto</ButtonText>
-                  </Button>
-                </VStack>
-              </Box>
-
-              <HStack className="flex-wrap gap-3">
-                <MetricCard
-                  title="Itens ativos"
-                  value={String(products.length)}
-                  helper="Quantidade atual de produtos cadastrados nesta unidade"
-                  badge="mix"
-                  tone="accent"
-                  className="min-w-[48%]"
-                />
-                <MetricCard
-                  title="Preco medio"
-                  value={formatCurrency(averagePrice)}
-                  helper={
-                    premiumProduct
-                      ? `${premiumProduct.name} lidera o ticket`
-                      : "Sem preco medio calculado"
-                  }
-                  badge="ticket"
-                  className="min-w-[48%]"
-                />
-              </HStack>
-
               {deleteProductMutation.error ? (
                 <Text className="text-error-700" size="sm">
                   Nao foi possivel excluir o produto.
@@ -252,9 +244,55 @@ export function StoreProductsScreen() {
                   />
                 ) : null}
 
-                {!productsQuery.isError && products.length > 0 ? (
+                {!productsQuery.isError &&
+                products.length > 0 &&
+                filteredProducts.length === 0 ? (
+                  <Box className="rounded-3xl border border-dashed border-outline-300 bg-background-50 px-6 py-10">
+                    <VStack className="items-center gap-4">
+                      <Box className="size-20 items-center justify-center rounded-full bg-background-100">
+                        <MaterialCommunityIcons
+                          name="package-variant-closed-remove"
+                          size={34}
+                          color="rgb(148 163 184)"
+                        />
+                      </Box>
+
+                      <VStack className="items-center gap-1">
+                        <Text
+                          bold
+                          className="text-center text-typography-950"
+                          size="lg"
+                        >
+                          Nenhum produto encontrado
+                        </Text>
+                        <Text
+                          className="text-center text-typography-600"
+                          size="sm"
+                        >
+                          Ajuste a busca ou os filtros para encontrar outro
+                          item.
+                        </Text>
+                      </VStack>
+
+                      {hasActiveFilters ? (
+                        <Button
+                          variant="outline"
+                          action="secondary"
+                          onPress={() => {
+                            setSearchTerm("");
+                            setActiveCategory(ALL_CATEGORY_LABEL);
+                          }}
+                        >
+                          <ButtonText>Limpar filtros</ButtonText>
+                        </Button>
+                      ) : null}
+                    </VStack>
+                  </Box>
+                ) : null}
+
+                {!productsQuery.isError && filteredProducts.length > 0 ? (
                   <ProductList
-                    products={products}
+                    products={filteredProducts}
                     onOpenDetails={(product) =>
                       router.push(
                         `/stores/${store.id}/products/${product.id}` as never,
@@ -267,6 +305,19 @@ export function StoreProductsScreen() {
               </VStack>
             </VStack>
           </ScrollView>
+
+          <Pressable
+            className="absolute bottom-6 right-6 size-14 items-center justify-center rounded-full bg-tertiary-700"
+            style={{
+              elevation: 8,
+              shadowColor: "#1d0d46",
+              shadowOpacity: 0.25,
+              shadowRadius: 12,
+            }}
+            onPress={() => setIsCreateOpen(true)}
+          >
+            <MaterialCommunityIcons name="plus" size={30} color="white" />
+          </Pressable>
         </Box>
       </SafeAreaView>
 
@@ -305,7 +356,9 @@ export function StoreProductsScreen() {
         product={deletingProduct}
         isDeleting={deleteProductMutation.isPending}
         errorMessage={
-          deleteProductMutation.error ? "Nao foi possivel excluir o produto." : null
+          deleteProductMutation.error
+            ? "Nao foi possivel excluir o produto."
+            : null
         }
         onClose={() => {
           deleteProductMutation.reset();
