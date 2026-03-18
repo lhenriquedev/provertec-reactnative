@@ -1,5 +1,4 @@
-import { FlatList } from "react-native";
-
+import { VStack } from "@/src/components/ui/vstack";
 import { ProductCard } from "@/src/features/products/components/ProductCard";
 import type { Product } from "@/src/features/products/types/product.types";
 
@@ -17,19 +16,16 @@ export function ProductList({
   onDelete,
 }: ProductListProps) {
   return (
-    <FlatList
-      data={products}
-      keyExtractor={(product) => product.id}
-      contentContainerStyle={{ gap: 12, paddingBottom: 16 }}
-      renderItem={({ item }) => (
+    <VStack className="gap-4 pb-4">
+      {products.map((product) => (
         <ProductCard
-          product={item}
+          key={product.id}
+          product={product}
           onOpenDetails={onOpenDetails}
           onEdit={onEdit}
           onDelete={onDelete}
         />
-      )}
-      showsVerticalScrollIndicator={false}
-    />
+      ))}
+    </VStack>
   );
 }

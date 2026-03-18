@@ -14,6 +14,7 @@ import { LoadingSpinner } from "@/src/shared/components/LoadingSpinner";
 import { MetricCard } from "@/src/shared/components/MetricCard";
 import { RetailBadge } from "@/src/shared/components/RetailBadge";
 import { formatCurrency } from "@/src/shared/utils/formatCurrency";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const getCategorySummary = (categories: string[]) => {
   const counts = categories.reduce<Record<string, number>>((acc, category) => {
@@ -35,7 +36,10 @@ export function DashboardScreen() {
   }
 
   if (storesQuery.isError || productsQuery.isError) {
-    const description = [storesQuery.error?.message, productsQuery.error?.message]
+    const description = [
+      storesQuery.error?.message,
+      productsQuery.error?.message,
+    ]
       .filter(Boolean)
       .join(" ");
 
@@ -43,7 +47,9 @@ export function DashboardScreen() {
       <Box className="flex-1 bg-background-0 px-5 py-6">
         <EmptyState
           title="Nao foi possivel carregar o painel"
-          description={description || "Tente novamente para recuperar a visao do negocio."}
+          description={
+            description || "Tente novamente para recuperar a visao do negocio."
+          }
           actionLabel="Ir para lojas"
           onAction={() => router.push("/stores")}
         />
@@ -69,18 +75,29 @@ export function DashboardScreen() {
 
   const totalStores = stores.length;
   const totalProducts = products.length;
-  const catalogValue = products.reduce((total, product) => total + product.price, 0);
+  const catalogValue = products.reduce(
+    (total, product) => total + product.price,
+    0,
+  );
   const averageTicket = totalProducts > 0 ? catalogValue / totalProducts : 0;
   const averageMix = totalStores > 0 ? totalProducts / totalStores : 0;
-  const topStore = [...stores].sort((left, right) => right.productsCount - left.productsCount)[0];
-  const premiumProduct = [...products].sort((left, right) => right.price - left.price)[0];
-  const categorySummary = getCategorySummary(products.map((product) => product.category));
+  const topStore = [...stores].sort(
+    (left, right) => right.productsCount - left.productsCount,
+  )[0];
+  const premiumProduct = [...products].sort(
+    (left, right) => right.price - left.price,
+  )[0];
+  const categorySummary = getCategorySummary(
+    products.map((product) => product.category),
+  );
   const leadingCategory = categorySummary[0];
-  const highlightedStores = [...stores].sort((left, right) => right.productsCount - left.productsCount).slice(0, 3);
+  const highlightedStores = [...stores]
+    .sort((left, right) => right.productsCount - left.productsCount)
+    .slice(0, 3);
   const totalCatalogItems = Math.max(totalProducts, 1);
 
   return (
-    <Box className="flex-1 bg-background-0">
+    <SafeAreaView className="flex-1 bg-background-0">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 20, paddingBottom: 32, gap: 20 }}
@@ -93,7 +110,8 @@ export function DashboardScreen() {
                 Operacao, catalogo e prioridades no mesmo painel.
               </Heading>
               <Text className="text-typography-700" size="sm">
-                Acompanhe a rede, identifique a loja mais forte e encontre rapido onde o mix ainda precisa crescer.
+                Acompanhe a rede, identifique a loja mais forte e encontre
+                rapido onde o mix ainda precisa crescer.
               </Text>
             </VStack>
 
@@ -120,7 +138,11 @@ export function DashboardScreen() {
           <MetricCard
             title="Lojas ativas"
             value={String(totalStores)}
-            helper={topStore ? `${topStore.name} lidera com ${topStore.productsCount} SKUs` : "Sem destaque ainda"}
+            helper={
+              topStore
+                ? `${topStore.name} lidera com ${topStore.productsCount} SKUs`
+                : "Sem destaque ainda"
+            }
             badge="rede"
             tone="accent"
             className="min-w-[48%]"
@@ -128,14 +150,22 @@ export function DashboardScreen() {
           <MetricCard
             title="SKUs no catalogo"
             value={String(totalProducts)}
-            helper={leadingCategory ? `${leadingCategory.category} e a maior categoria` : "Monte seu primeiro mix"}
+            helper={
+              leadingCategory
+                ? `${leadingCategory.category} e a maior categoria`
+                : "Monte seu primeiro mix"
+            }
             badge="catalogo"
             className="min-w-[48%]"
           />
           <MetricCard
             title="Ticket medio"
             value={formatCurrency(averageTicket)}
-            helper={premiumProduct ? `${premiumProduct.name} e o produto premium` : "Sem ticket calculado"}
+            helper={
+              premiumProduct
+                ? `${premiumProduct.name} e o produto premium`
+                : "Sem ticket calculado"
+            }
             badge="preco"
             className="min-w-[48%]"
           />
@@ -162,7 +192,9 @@ export function DashboardScreen() {
               <Box className="rounded-2xl border border-outline-200 bg-background-0 px-4 py-4">
                 <VStack className="gap-1">
                   <RetailBadge label="Loja mais forte" tone="success" />
-                  <Heading size="md">{topStore?.name ?? "Sem loja em destaque"}</Heading>
+                  <Heading size="md">
+                    {topStore?.name ?? "Sem loja em destaque"}
+                  </Heading>
                   <Text className="text-typography-600" size="sm">
                     {topStore
                       ? `${topStore.productsCount} produtos cadastrados e maior densidade do catalogo.`
@@ -174,7 +206,9 @@ export function DashboardScreen() {
               <Box className="rounded-2xl border border-outline-200 bg-background-0 px-4 py-4">
                 <VStack className="gap-1">
                   <RetailBadge label="Categoria lider" tone="warning" />
-                  <Heading size="md">{leadingCategory?.category ?? "Sem categoria lider"}</Heading>
+                  <Heading size="md">
+                    {leadingCategory?.category ?? "Sem categoria lider"}
+                  </Heading>
                   <Text className="text-typography-600" size="sm">
                     {leadingCategory
                       ? `${leadingCategory.total} itens concentram hoje a maior parte do mix.`
@@ -188,7 +222,8 @@ export function DashboardScreen() {
                   <RetailBadge label="Valor do mix" tone="accent" />
                   <Heading size="md">{formatCurrency(catalogValue)}</Heading>
                   <Text className="text-typography-600" size="sm">
-                    Soma simples dos valores cadastrados para leitura rapida do catalogo atual.
+                    Soma simples dos valores cadastrados para leitura rapida do
+                    catalogo atual.
                   </Text>
                 </VStack>
               </Box>
@@ -215,7 +250,9 @@ export function DashboardScreen() {
                     <HStack className="items-start justify-between gap-3">
                       <VStack className="flex-1 gap-1">
                         <HStack className="items-center gap-2">
-                          <RetailBadge tone={index === 0 ? "accent" : "neutral"}>
+                          <RetailBadge
+                            tone={index === 0 ? "accent" : "neutral"}
+                          >
                             #{index + 1}
                           </RetailBadge>
                           <Heading size="md">{store.name}</Heading>
@@ -225,7 +262,9 @@ export function DashboardScreen() {
                         </Text>
                       </VStack>
 
-                      <RetailBadge tone={store.productsCount > 0 ? "success" : "warning"}>
+                      <RetailBadge
+                        tone={store.productsCount > 0 ? "success" : "warning"}
+                      >
                         {store.productsCount} SKUs
                       </RetailBadge>
                     </HStack>
@@ -233,7 +272,9 @@ export function DashboardScreen() {
                     <Button
                       action="secondary"
                       variant="outline"
-                      onPress={() => router.push(`/stores/${store.id}` as never)}
+                      onPress={() =>
+                        router.push(`/stores/${store.id}` as never)
+                      }
                     >
                       <ButtonText>Ver operacao da loja</ButtonText>
                     </Button>
@@ -258,12 +299,17 @@ export function DashboardScreen() {
                 const share = item.total / totalCatalogItems;
 
                 return (
-                  <VStack key={item.category} className="gap-2 rounded-2xl border border-outline-200 bg-background-0 px-4 py-4">
+                  <VStack
+                    key={item.category}
+                    className="gap-2 rounded-2xl border border-outline-200 bg-background-0 px-4 py-4"
+                  >
                     <HStack className="items-center justify-between gap-3">
                       <Text bold size="sm">
                         {item.category}
                       </Text>
-                      <RetailBadge tone="neutral">{item.total} itens</RetailBadge>
+                      <RetailBadge tone="neutral">
+                        {item.total} itens
+                      </RetailBadge>
                     </HStack>
 
                     <Box className="h-2 rounded-full bg-background-200">
@@ -283,6 +329,6 @@ export function DashboardScreen() {
           </VStack>
         </Box>
       </ScrollView>
-    </Box>
+    </SafeAreaView>
   );
 }

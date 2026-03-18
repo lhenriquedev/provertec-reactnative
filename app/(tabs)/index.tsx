@@ -1,5 +1,5 @@
-import { DashboardScreen } from "@/src/features/dashboard/screens/DashboardScreen";
+// import { DashboardScreen } from "@/src/features/dashboard/screens/DashboardScreen";
 
-export default function HomeScreen() {
-  return <DashboardScreen />;
-}
+// export default function HomeScreen() {
+//   return <DashboardScreen />;
+// }

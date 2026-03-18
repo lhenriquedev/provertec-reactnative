@@ -20,7 +20,7 @@ export function StoreList({
     <FlatList
       data={stores}
       keyExtractor={(store) => store.id}
-      contentContainerStyle={{ gap: 12, paddingBottom: 16 }}
+      contentContainerStyle={{ gap: 14, paddingBottom: 120 }}
       renderItem={({ item }) => (
         <StoreCard
           store={item}

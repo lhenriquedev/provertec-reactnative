@@ -1,16 +1,19 @@
-import { Tabs } from "expo-router";
-import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 import { useColorScheme } from "nativewind";
+import React from "react";
 
 import { HapticTab } from "@/src/components/haptic-tab";
-import { STITCH_COLOR_MODE, getTabBarPalette } from "@/src/infra/theme/stitch-palette";
+import {
+  STITCH_COLOR_MODE,
+  getTabBarPalette,
+} from "@/src/infra/theme/stitch-palette";
 
 export default function TabLayout() {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
   const tabBarPalette = getTabBarPalette(
-    isDark ? STITCH_COLOR_MODE.dark : STITCH_COLOR_MODE.light
+    isDark ? STITCH_COLOR_MODE.dark : STITCH_COLOR_MODE.light,
   );
 
   return (
@@ -41,7 +44,11 @@ export default function TabLayout() {
         options={{
           title: "Painel",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons color={color} name="view-grid-outline" size={size} />
+            <MaterialCommunityIcons
+              color={color}
+              name="view-grid-outline"
+              size={size}
+            />
           ),
         }}
       />
@@ -50,7 +57,11 @@ export default function TabLayout() {
         options={{
           title: "Lojas",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons color={color} name="storefront-outline" size={size} />
+            <MaterialCommunityIcons
+              color={color}
+              name="storefront-outline"
+              size={size}
+            />
           ),
         }}
       />
