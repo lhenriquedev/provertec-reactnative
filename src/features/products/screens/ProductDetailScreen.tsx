@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,7 +12,10 @@ import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
 import { DeleteProductAlertDialog } from "@/src/features/products/components/DeleteProductAlertDialog";
 import { EditProductActionsheet } from "@/src/features/products/components/EditProductActionsheet";
-import { useProductDetails, useProducts } from "@/src/features/products/hooks/useProducts";
+import {
+  useProductDetails,
+  useProducts,
+} from "@/src/features/products/hooks/useProducts";
 import type {
   Product,
   ProductUpdateInput,
@@ -46,24 +49,31 @@ export function ProductDetailScreen() {
     productId?: string | string[];
   }>();
   const storeId = typeof params.id === "string" ? params.id : "";
-  const productId = typeof params.productId === "string" ? params.productId : "";
+  const productId =
+    typeof params.productId === "string" ? params.productId : "";
   const storeQuery = useStoreDetails(storeId);
   const productQuery = useProductDetails(productId);
-  const { productsQuery, updateProductMutation, deleteProductMutation } = useProducts({
-    storeId,
-  });
+  const { productsQuery, updateProductMutation, deleteProductMutation } =
+    useProducts({
+      storeId,
+    });
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState(false);
 
   const store = storeQuery.data;
   const product = productQuery.data;
   const storeProducts = productsQuery.data ?? [];
-  const catalogProducts = storeProducts.filter((item) => item.id !== product?.id);
+  const catalogProducts = storeProducts.filter(
+    (item) => item.id !== product?.id,
+  );
   const catalogAveragePrice =
     storeProducts.length > 0
-      ? storeProducts.reduce((total, item) => total + item.price, 0) / storeProducts.length
+      ? storeProducts.reduce((total, item) => total + item.price, 0) /
+        storeProducts.length
       : 0;
-  const premiumProduct = [...storeProducts].sort((left, right) => right.price - left.price)[0];
+  const premiumProduct = [...storeProducts].sort(
+    (left, right) => right.price - left.price,
+  )[0];
   const sameCategoryCount = product
     ? storeProducts.filter((item) => item.category === product.category).length
     : 0;
@@ -104,7 +114,9 @@ export function ProductDetailScreen() {
               : "Nao foi possivel localizar o produto selecionado."
           }
           actionLabel="Voltar para produtos"
-          onAction={() => router.replace(`/stores/${storeId}/products` as never)}
+          onAction={() =>
+            router.replace(`/stores/${storeId}/products` as never)
+          }
         />
       </Box>
     );
@@ -139,10 +151,10 @@ export function ProductDetailScreen() {
             </Box>
 
             <VStack className="gap-5 px-5 pb-8 pt-5">
-              <Box className="rounded-[32px] border border-tertiary-200 bg-background-50 px-5 py-5">
+              <Box className="rounded-md border border-tertiary-200 bg-background-50 px-5 py-5">
                 <VStack className="gap-5">
                   <HStack className="items-center gap-4">
-                    <Box className="size-24 items-center justify-center rounded-[28px] bg-tertiary-100">
+                    <Box className="size-24 items-center justify-center rounded-md bg-tertiary-100">
                       <MaterialCommunityIcons
                         name={getCategoryIcon(product.category)}
                         size={38}
@@ -159,7 +171,10 @@ export function ProductDetailScreen() {
                             size={16}
                             color="rgb(100 116 139)"
                           />
-                          <Text className="flex-1 text-typography-600" size="sm">
+                          <Text
+                            className="flex-1 text-typography-600"
+                            size="sm"
+                          >
                             {store.name}
                           </Text>
                         </HStack>
@@ -182,16 +197,14 @@ export function ProductDetailScreen() {
                     </VStack>
                   </HStack>
 
-                  <Box className="rounded-[28px] border border-tertiary-200 bg-tertiary-50 px-4 py-4">
-                    <Text className="text-typography-500" size="sm">
-                      Preco cadastrado
-                    </Text>
-                    <Heading className="mt-1 text-typography-950" size="2xl">
-                      {formatCurrency(product.price)}
-                    </Heading>
-                  </Box>
+                  <Heading className="mt-1 text-typography-950" size="2xl">
+                    {formatCurrency(product.price)}
+                  </Heading>
 
-                  <Button className="h-12 rounded-2xl" onPress={() => setEditingProduct(product)}>
+                  <Button
+                    className="h-12 rounded-2xl"
+                    onPress={() => setEditingProduct(product)}
+                  >
                     <ButtonText>Editar produto</ButtonText>
                   </Button>
                 </VStack>
@@ -201,11 +214,6 @@ export function ProductDetailScreen() {
                 <MetricCard
                   title="Categoria"
                   value={product.category}
-                  helper={
-                    sameCategoryCount > 0
-                      ? `${sameCategoryCount} item(ns) desta categoria nesta loja`
-                      : "Segmento principal do item no catalogo"
-                  }
                   badge="mix"
                   tone="accent"
                   className="min-w-[48%]"
@@ -213,7 +221,6 @@ export function ProductDetailScreen() {
                 <MetricCard
                   title="Loja vinculada"
                   value={store.name}
-                  helper="Unidade atualmente responsavel pelo item"
                   badge="rede"
                   tone="neutral"
                   className="min-w-[48%]"
@@ -228,14 +235,16 @@ export function ProductDetailScreen() {
                   <Button
                     action="primary"
                     variant="link"
-                    onPress={() => router.push(`/stores/${store.id}/products` as never)}
+                    onPress={() =>
+                      router.push(`/stores/${store.id}/products` as never)
+                    }
                   >
                     <ButtonText>Ver catalogo</ButtonText>
                   </Button>
                 </HStack>
 
                 {productsQuery.isLoading ? (
-                  <Box className="rounded-[28px] border border-outline-200 bg-background-50 px-5 py-6">
+                  <Box className="rounded-md border border-outline-200 bg-background-50 px-5 py-6">
                     <Text className="text-typography-600" size="sm">
                       Carregando a leitura do catalogo desta loja...
                     </Text>
@@ -243,7 +252,7 @@ export function ProductDetailScreen() {
                 ) : null}
 
                 {productsQuery.isError ? (
-                  <Box className="rounded-[28px] border border-error-200 bg-error-50 px-5 py-5">
+                  <Box className="rounded-md border border-error-200 bg-error-50 px-5 py-5">
                     <VStack className="gap-3">
                       <Text className="text-error-700" size="sm">
                         Nao foi possivel carregar o contexto do catalogo.
@@ -262,7 +271,7 @@ export function ProductDetailScreen() {
                 ) : null}
 
                 {!productsQuery.isLoading && !productsQuery.isError ? (
-                  <Box className="rounded-[28px] border border-outline-200 bg-background-50 p-5">
+                  <Box className="rounded-md border border-outline-200 bg-background-50 p-5">
                     <VStack className="gap-4">
                       <VStack className="gap-1">
                         <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
@@ -288,7 +297,9 @@ export function ProductDetailScreen() {
                               ? `${catalogProducts.length} alem deste produto`
                               : "Item unico no catalogo"
                           }
-                          tone={catalogProducts.length > 0 ? "success" : "warning"}
+                          tone={
+                            catalogProducts.length > 0 ? "success" : "warning"
+                          }
                           textClassName="normal-case tracking-normal"
                         />
                       </HStack>
@@ -323,7 +334,9 @@ export function ProductDetailScreen() {
                       <Button
                         variant="outline"
                         action="secondary"
-                        onPress={() => router.push(`/stores/${store.id}/products` as never)}
+                        onPress={() =>
+                          router.push(`/stores/${store.id}/products` as never)
+                        }
                       >
                         <ButtonText>Abrir catalogo completo</ButtonText>
                       </Button>
@@ -331,7 +344,9 @@ export function ProductDetailScreen() {
                       <Button
                         variant="link"
                         action="secondary"
-                        onPress={() => router.push(`/stores/${store.id}` as never)}
+                        onPress={() =>
+                          router.push(`/stores/${store.id}` as never)
+                        }
                       >
                         <ButtonText>Ver detalhes da loja</ButtonText>
                       </Button>
@@ -346,7 +361,7 @@ export function ProductDetailScreen() {
                 </Text>
               ) : null}
 
-              <Box className="rounded-[28px] border border-outline-200 bg-background-50 p-5">
+              <Box className="rounded-md border border-outline-200 bg-background-50 p-5">
                 <VStack className="gap-3">
                   <VStack className="gap-1">
                     <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
@@ -376,7 +391,9 @@ export function ProductDetailScreen() {
                   <Button
                     variant="link"
                     action="secondary"
-                    onPress={() => router.replace(`/stores/${storeId}/products` as never)}
+                    onPress={() =>
+                      router.replace(`/stores/${storeId}/products` as never)
+                    }
                   >
                     <ButtonText>Voltar para catalogo</ButtonText>
                   </Button>
@@ -390,7 +407,11 @@ export function ProductDetailScreen() {
       <EditProductActionsheet
         product={editingProduct}
         isSubmitting={updateProductMutation.isPending}
-        errorMessage={updateProductMutation.error ? "Nao foi possivel atualizar o produto." : null}
+        errorMessage={
+          updateProductMutation.error
+            ? "Nao foi possivel atualizar o produto."
+            : null
+        }
         onClose={() => {
           updateProductMutation.reset();
           setEditingProduct(null);
@@ -401,7 +422,11 @@ export function ProductDetailScreen() {
       <DeleteProductAlertDialog
         product={deletingProduct ? product : null}
         isDeleting={deleteProductMutation.isPending}
-        errorMessage={deleteProductMutation.error ? "Nao foi possivel excluir o produto." : null}
+        errorMessage={
+          deleteProductMutation.error
+            ? "Nao foi possivel excluir o produto."
+            : null
+        }
         onClose={() => {
           deleteProductMutation.reset();
           setDeletingProduct(false);

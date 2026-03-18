@@ -56,7 +56,7 @@ function StoreProductPreviewRow({
 }: StoreProductPreviewRowProps) {
   return (
     <Pressable
-      className="rounded-[24px] border border-outline-200 bg-background-50 px-4 py-3 active:opacity-90"
+      className="rounded-md border border-outline-200 bg-background-50 px-4 py-3 active:opacity-90"
       onPress={() => onPress(product)}
     >
       <HStack className="items-center gap-3">
@@ -178,10 +178,10 @@ export function StoreDetailScreen() {
             </Box>
 
             <VStack className="gap-5 px-5 pb-8 pt-5">
-              <Box className="rounded-[32px] border border-tertiary-200 bg-background-50 px-5 py-5">
+              <Box className="rounded-md border border-tertiary-200 bg-background-50 px-5 py-5">
                 <VStack className="gap-5">
                   <HStack className="items-center gap-4">
-                    <Box className="size-24 items-center justify-center rounded-[28px] bg-tertiary-100">
+                    <Box className="size-24 items-center justify-center rounded-md bg-tertiary-100">
                       <MaterialCommunityIcons
                         name="storefront-outline"
                         size={38}
@@ -263,7 +263,7 @@ export function StoreDetailScreen() {
                 </HStack>
 
                 {productsQuery.isLoading ? (
-                  <Box className="rounded-[28px] border border-outline-200 bg-background-50 px-5 py-6">
+                  <Box className="rounded-md border border-outline-200 bg-background-50 px-5 py-6">
                     <Text className="text-typography-600" size="sm">
                       Carregando os produtos desta unidade...
                     </Text>
@@ -271,7 +271,7 @@ export function StoreDetailScreen() {
                 ) : null}
 
                 {productsQuery.isError ? (
-                  <Box className="rounded-[28px] border border-error-200 bg-error-50 px-5 py-5">
+                  <Box className="rounded-md border border-error-200 bg-error-50 px-5 py-5">
                     <VStack className="gap-3">
                       <Text className="text-error-700" size="sm">
                         Nao foi possivel carregar a previa do catalogo.
@@ -316,51 +316,12 @@ export function StoreDetailScreen() {
                   </VStack>
                 ) : null}
               </VStack>
-
-              {/* <Box className="rounded-[28px] border border-outline-200 bg-background-50 p-5">
-                <VStack className="gap-3">
-                  <VStack className="gap-1">
-                    <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
-                      Gestao da unidade
-                    </Text>
-                    <Text bold className="text-typography-950" size="lg">
-                      Ajuste a operacao quando precisar.
-                    </Text>
-                  </VStack>
-
-                  <Button
-                    variant="outline"
-                    action="secondary"
-                    onPress={() =>
-                      router.push(`/stores/${store.id}/products` as never)
-                    }
-                  >
-                    <ButtonText>Abrir catalogo completo</ButtonText>
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    action="negative"
-                    onPress={() => setIsDeleteOpen(true)}
-                  >
-                    <ButtonText>Excluir loja</ButtonText>
-                  </Button>
-
-                  <Button
-                    variant="link"
-                    action="secondary"
-                    onPress={() => router.back()}
-                  >
-                    <ButtonText>Voltar para a rede</ButtonText>
-                  </Button>
-                </VStack>
-              </Box> */}
             </VStack>
           </ScrollView>
 
           {!productsQuery.isError ? (
             <Pressable
-              className="absolute bottom-24 right-5 size-14 items-center justify-center rounded-full bg-primary-500 active:opacity-90"
+              className="absolute bottom-4 right-5 size-14 items-center justify-center rounded-full bg-primary-500 active:opacity-90"
               style={{
                 boxShadow: "0px 12px 24px rgba(59, 30, 138, 0.28)",
               }}

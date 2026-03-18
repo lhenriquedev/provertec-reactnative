@@ -101,10 +101,6 @@ export function CreateProductActionsheet({
                 <ButtonText className="text-tertiary-800">Cancelar</ButtonText>
               </Button>
             </VStack>
-
-            <Text className="px-2 text-center text-2xs leading-5 text-typography-500">
-              As alteracoes sao aplicadas instantaneamente ao catalogo da loja.
-            </Text>
           </VStack>
         </ActionsheetScrollView>
       </ActionsheetContent>

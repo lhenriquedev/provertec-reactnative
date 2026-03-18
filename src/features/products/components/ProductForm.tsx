@@ -4,6 +4,8 @@ import {
   FormControl,
   FormControlError,
   FormControlErrorText,
+  FormControlLabel,
+  FormControlLabelText,
 } from "@/src/components/ui/form-control";
 import { Input, InputField, InputSlot } from "@/src/components/ui/input";
 import { Text } from "@/src/components/ui/text";
@@ -26,8 +28,12 @@ export function ProductForm({
   variant = "default",
 }: ProductFormProps) {
   return (
-    <VStack>
+    <VStack space="md">
       <FormControl isInvalid={Boolean(errors.name)}>
+        <FormControlLabel>
+          <FormControlLabelText>Nome do produto</FormControlLabelText>
+        </FormControlLabel>
+
         <Controller
           control={control}
           name="name"
@@ -50,6 +56,10 @@ export function ProductForm({
       </FormControl>
 
       <FormControl isInvalid={Boolean(errors.category)}>
+        <FormControlLabel>
+          <FormControlLabelText>Categoria do produto</FormControlLabelText>
+        </FormControlLabel>
+
         <Controller
           control={control}
           name="category"
@@ -74,6 +84,10 @@ export function ProductForm({
       </FormControl>
 
       <FormControl isInvalid={Boolean(errors.price)}>
+        <FormControlLabel>
+          <FormControlLabelText>Preço do produto</FormControlLabelText>
+        </FormControlLabel>
+
         <Controller
           control={control}
           name="price"

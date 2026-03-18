@@ -23,7 +23,10 @@ const toneClassNames: Record<MetricTone, string> = {
   warning: "border-warning-300 bg-warning-50",
 };
 
-const badgeTones: Record<MetricTone, "neutral" | "accent" | "success" | "warning"> = {
+const badgeTones: Record<
+  MetricTone,
+  "neutral" | "accent" | "success" | "warning"
+> = {
   neutral: "neutral",
   accent: "accent",
   success: "success",
@@ -40,18 +43,20 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <Box
-      className={`min-h-[144px] flex-1 rounded-[28px] border p-5 ${toneClassNames[tone]} ${className ?? ""}`}
+      className={`flex-1 rounded-md border p-5 ${toneClassNames[tone]} ${className ?? ""}`}
     >
       <VStack className="flex-1 justify-between gap-4">
         <HStack className="items-start justify-between gap-3">
           <Text className="flex-1 text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
             {title}
           </Text>
-          {badge ? <RetailBadge tone={badgeTones[tone]}>{badge}</RetailBadge> : null}
+          {badge ? (
+            <RetailBadge tone={badgeTones[tone]}>{badge}</RetailBadge>
+          ) : null}
         </HStack>
 
         <VStack className="gap-1">
-          <Heading className="text-typography-950" size="2xl">
+          <Heading className="text-typography-950" size="lg">
             {value}
           </Heading>
           {helper ? (

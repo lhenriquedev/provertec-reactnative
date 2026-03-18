@@ -33,26 +33,28 @@ export function DeleteProductAlertDialog({
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose}>
       <AlertDialogBackdrop className="bg-background-950/70" />
-      <AlertDialogContent className="rounded-[28px] border-outline-200 bg-background-0 p-0">
+      <AlertDialogContent className="rounded-md border-outline-200 bg-background-0 p-0">
         <AlertDialogHeader className="px-5 pt-5">
           <RetailBadge label="Acao destrutiva" tone="danger" />
         </AlertDialogHeader>
 
         <AlertDialogBody className="max-h-none px-5 py-4">
           <VStack className="gap-4">
-            <Box className="rounded-[24px] border border-error-300 bg-error-100 px-4 py-4">
+            <Box className="rounded-md border border-error-300 bg-error-100 px-4 py-4">
               <VStack className="gap-2">
                 <Text bold className="text-error-900" size="lg">
                   Excluir produto
                 </Text>
                 <Text className="text-error-800" size="sm">
-                  Deseja remover <Text bold>{product?.name}</Text> do catalogo? Essa exclusao e permanente.
+                  Deseja remover <Text bold>{product?.name}</Text> do catalogo?
+                  Essa exclusao e permanente.
                 </Text>
               </VStack>
             </Box>
 
             <Text className="text-typography-600" size="sm">
-              O item deixara de aparecer na loja, no painel e nos indicadores de ticket.
+              O item deixara de aparecer na loja, no painel e nos indicadores de
+              ticket.
             </Text>
 
             {errorMessage ? (

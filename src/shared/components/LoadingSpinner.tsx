@@ -16,7 +16,7 @@ export function LoadingSpinner({
 }: LoadingSpinnerProps) {
   return (
     <Box className="flex-1 items-center justify-center bg-background-0 px-6">
-      <VStack className="items-center gap-3 rounded-[28px] border border-outline-200 bg-background-50 px-6 py-8">
+      <VStack className="items-center gap-3 rounded-md border border-outline-200 bg-background-50 px-6 py-8">
         <ActivityIndicator size="large" />
         <VStack className="items-center gap-1">
           <Heading size="md">{label}</Heading>

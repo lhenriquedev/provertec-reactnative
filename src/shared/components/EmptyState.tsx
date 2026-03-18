@@ -1,5 +1,5 @@
-import { Button, ButtonText } from "@/src/components/ui/button";
 import { Box } from "@/src/components/ui/box";
+import { Button, ButtonText } from "@/src/components/ui/button";
 import { Heading } from "@/src/components/ui/heading";
 import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
@@ -19,7 +19,7 @@ export function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <Box className="rounded-[28px] border border-dashed border-outline-300 bg-background-50 px-6 py-10">
+    <Box className="rounded-md border border-dashed border-outline-300 bg-background-50 px-6 py-10">
       <VStack className="items-center justify-center gap-4">
         <RetailBadge label="Retail manager" tone="neutral" />
 

@@ -45,7 +45,10 @@ export function StoreProductsScreen() {
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY_LABEL);
 
   const store = storeQuery.data;
-  const products = useMemo(() => productsQuery.data ?? [], [productsQuery.data]);
+  const products = useMemo(
+    () => productsQuery.data ?? [],
+    [productsQuery.data],
+  );
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
   const categories = useMemo(
     () => [
@@ -183,9 +186,7 @@ export function StoreProductsScreen() {
                         <Pressable
                           key={category}
                           className={`h-9 items-center justify-center rounded-full px-5 ${
-                            isActive
-                              ? "bg-tertiary-700"
-                              : "bg-background-100"
+                            isActive ? "bg-tertiary-700" : "bg-background-200"
                           }`}
                           onPress={() => setActiveCategory(category)}
                         >
@@ -307,7 +308,7 @@ export function StoreProductsScreen() {
           </ScrollView>
 
           <Pressable
-            className="absolute bottom-6 right-6 size-14 items-center justify-center rounded-full bg-tertiary-700"
+            className="absolute bottom-4 right-6 size-14 items-center justify-center rounded-full bg-tertiary-700"
             style={{
               elevation: 8,
               shadowColor: "#1d0d46",

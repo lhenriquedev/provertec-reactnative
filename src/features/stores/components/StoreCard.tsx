@@ -24,7 +24,7 @@ export function StoreCard({
   onDelete,
 }: StoreCardProps) {
   return (
-    <Box className="rounded-2xl border border-outline-200 bg-background-50 p-4">
+    <Box className="rounded-md border border-outline-200 bg-background-50 p-4">
       <VStack className="gap-4">
         <HStack className="items-start justify-between gap-3">
           <VStack className="flex-1 gap-2">
