@@ -7,4 +7,10 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  {
+    files: ['src/components/ui/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'import/no-duplicates': 'off',
+    },
+  },
 ]);

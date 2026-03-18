@@ -18,9 +18,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="stores"
         options={{
-          title: "Explore",
+          title: "Lojas",
         }}
       />
     </Tabs>
