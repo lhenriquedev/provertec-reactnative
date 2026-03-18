@@ -20,6 +20,7 @@ import type {
 import { EmptyState } from "@/src/shared/components/EmptyState";
 import { LoadingSpinner } from "@/src/shared/components/LoadingSpinner";
 
+import { Heading } from "@/src/components/ui/heading";
 import { getStoreErrorMessage } from "@/src/features/stores/utils/getStoreErrorMessage";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -189,15 +190,17 @@ export function StoresScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-0">
+    <SafeAreaView className="flex-1 bg-background-0" edges={["top"]}>
       <Box className="flex-1 bg-background-0">
-        <VStack className="flex-1 gap-4 px-4 pb-4 pt-3">
-          <HStack className="items-center justify-between">
-            <Text bold className="text-typography-950" size="2xl">
-              Minhas lojas
-            </Text>
+        <Box className="border-b border-outline-300 bg-background-0 px-5 py-4">
+          <HStack className="items-center gap-3">
+            <Heading className="flex-1" size="md">
+              Minhas Lojas
+            </Heading>
           </HStack>
+        </Box>
 
+        <VStack className="flex-1 gap-4 px-4 pb-4 pt-3">
           <HStack className="h-12 items-center rounded-xl border border-outline-200 bg-background-50 px-3">
             <MaterialCommunityIcons
               name="magnify"
@@ -236,20 +239,20 @@ export function StoresScreen() {
             />
           </Box>
         </VStack>
-
-        <Pressable
-          className="absolute bottom-0 right-6 size-14 items-center justify-center rounded-full bg-primary-700"
-          style={{
-            elevation: 8,
-            shadowColor: "#1d0d46",
-            shadowOpacity: 0.25,
-            shadowRadius: 12,
-          }}
-          onPress={() => setIsCreateOpen(true)}
-        >
-          <MaterialCommunityIcons name="plus" size={30} color="white" />
-        </Pressable>
       </Box>
+
+      <Pressable
+        className="absolute bottom-4 right-6 size-14 items-center justify-center rounded-full bg-tertiary-700"
+        style={{
+          elevation: 8,
+          shadowColor: "#1d0d46",
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+        }}
+        onPress={() => setIsCreateOpen(true)}
+      >
+        <MaterialCommunityIcons name="plus" size={30} color="white" />
+      </Pressable>
 
       <CreateStoreActionsheet
         isOpen={isCreateOpen}

@@ -38,7 +38,7 @@ export function CreateStoreActionsheet({
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose}>
       <ActionsheetBackdrop className="bg-background-950/70" />
-      <ActionsheetContent className="rounded-t-[36px] border-outline-200 bg-background-0 px-0 pb-safe">
+      <ActionsheetContent className="border-outline-200 bg-background-0 px-0 pb-safe">
         <ActionsheetDragIndicatorWrapper className="pt-2">
           <ActionsheetDragIndicator className="w-20 bg-background-300" />
         </ActionsheetDragIndicatorWrapper>
