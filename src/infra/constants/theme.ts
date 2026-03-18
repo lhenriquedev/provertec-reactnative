@@ -5,24 +5,26 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+import { STITCH_THEME } from '@/src/infra/theme/stitch-palette';
+
+const tintColorLight = STITCH_THEME.light.primary;
+const tintColorDark = STITCH_THEME.dark.primary;
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: STITCH_THEME.light.textStrong,
+    background: STITCH_THEME.light.background,
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    icon: STITCH_THEME.light.textMuted,
+    tabIconDefault: STITCH_THEME.light.textMuted,
     tabIconSelected: tintColorLight,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
+    text: STITCH_THEME.dark.textStrong,
+    background: STITCH_THEME.dark.background,
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    icon: STITCH_THEME.dark.textMuted,
+    tabIconDefault: STITCH_THEME.dark.textMuted,
     tabIconSelected: tintColorDark,
   },
 };

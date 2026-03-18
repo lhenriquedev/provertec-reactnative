@@ -10,25 +10,25 @@ import { Box } from "@/src/components/ui/box";
 import { Button, ButtonSpinner, ButtonText } from "@/src/components/ui/button";
 import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
-import type { Store } from "@/src/features/stores/types/store.types";
+import type { Product } from "@/src/features/products/types/product.types";
 import { RetailBadge } from "@/src/shared/components/RetailBadge";
 
-type DeleteStoreAlertDialogProps = {
-  store: Store | null;
+type DeleteProductAlertDialogProps = {
+  product: Product | null;
   isDeleting: boolean;
   errorMessage: string | null;
   onClose: () => void;
   onConfirm: () => Promise<void> | void;
 };
 
-export function DeleteStoreAlertDialog({
-  store,
+export function DeleteProductAlertDialog({
+  product,
   isDeleting,
   errorMessage,
   onClose,
   onConfirm,
-}: DeleteStoreAlertDialogProps) {
-  const isOpen = Boolean(store);
+}: DeleteProductAlertDialogProps) {
+  const isOpen = Boolean(product);
 
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose}>
@@ -43,25 +43,25 @@ export function DeleteStoreAlertDialog({
             <Box className="rounded-[24px] border border-error-300 bg-error-100 px-4 py-4">
               <VStack className="gap-2">
                 <Text bold className="text-error-900" size="lg">
-                  Excluir loja
+                  Excluir produto
                 </Text>
                 <Text className="text-error-800" size="sm">
-                  Deseja remover <Text bold>{store?.name}</Text> da rede? Essa exclusao e permanente.
+                  Deseja remover <Text bold>{product?.name}</Text> do catalogo? Essa exclusao e permanente.
                 </Text>
               </VStack>
             </Box>
 
             <Text className="text-typography-600" size="sm">
-              A unidade deixara de aparecer no painel e na navegacao da operacao.
+              O item deixara de aparecer na loja, no painel e nos indicadores de ticket.
             </Text>
 
-          {errorMessage ? (
+            {errorMessage ? (
               <Box className="rounded-2xl border border-error-300 bg-error-100 px-4 py-3">
                 <Text className="text-error-800" size="sm">
                   {errorMessage}
                 </Text>
               </Box>
-          ) : null}
+            ) : null}
           </VStack>
         </AlertDialogBody>
 
@@ -75,7 +75,12 @@ export function DeleteStoreAlertDialog({
           >
             <ButtonText>Cancelar</ButtonText>
           </Button>
-          <Button className="h-12 flex-1 rounded-2xl" action="negative" onPress={onConfirm} isDisabled={isDeleting}>
+          <Button
+            className="h-12 flex-1 rounded-2xl"
+            action="negative"
+            onPress={onConfirm}
+            isDisabled={isDeleting}
+          >
             {isDeleting ? <ButtonSpinner /> : null}
             <ButtonText>Excluir</ButtonText>
           </Button>

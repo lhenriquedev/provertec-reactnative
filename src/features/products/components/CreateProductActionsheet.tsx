@@ -1,5 +1,5 @@
+import { Box } from "@/src/components/ui/box";
 import { Button, ButtonSpinner, ButtonText } from "@/src/components/ui/button";
-import { Heading } from "@/src/components/ui/heading";
 import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
 import {
@@ -15,6 +15,7 @@ import {
   mapFormValuesToProductInput,
   useProductForm,
 } from "@/src/features/products/hooks/useProductForm";
+import { RetailBadge } from "@/src/shared/components/RetailBadge";
 import type { ProductInput } from "@/src/features/products/types/product.types";
 
 type CreateProductActionsheetProps = {
@@ -42,16 +43,32 @@ export function CreateProductActionsheet({
 
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose}>
-      <ActionsheetBackdrop />
-      <ActionsheetContent>
-        <ActionsheetDragIndicatorWrapper>
-          <ActionsheetDragIndicator />
+      <ActionsheetBackdrop className="bg-background-950/70" />
+      <ActionsheetContent className="rounded-t-[36px] border-outline-200 bg-background-0 px-0 pb-safe">
+        <ActionsheetDragIndicatorWrapper className="pt-2">
+          <ActionsheetDragIndicator className="w-20 bg-background-300" />
         </ActionsheetDragIndicatorWrapper>
 
-        <VStack className="w-full gap-5 px-2 pb-2 pt-3">
-          <VStack className="gap-1">
-            <Heading size="lg">Criar produto</Heading>
-            <Text size="sm">Cadastre um novo produto para esta loja.</Text>
+        <VStack className="w-full gap-5 px-5 pb-6 pt-2">
+          <Box className="rounded-[28px] border border-tertiary-300 bg-tertiary-100 px-4 py-5">
+            <VStack className="gap-2">
+              <RetailBadge label="Novo produto" tone="accent" className="self-start" />
+              <Text bold className="text-typography-950" size="lg">
+                Expandir o catalogo da unidade.
+              </Text>
+              <Text className="text-typography-700" size="sm">
+                Cadastre um item com nome, categoria e preco para ele aparecer no painel e no mix da loja.
+              </Text>
+            </VStack>
+          </Box>
+
+          <VStack className="gap-2">
+            <Text className="text-2xs font-bold uppercase tracking-[0.9px] text-typography-500">
+              Dados do produto
+            </Text>
+            <Text className="text-typography-600" size="sm">
+              Quanto mais claro o cadastro, mais util fica a leitura da operacao.
+            </Text>
           </VStack>
 
           <ProductForm
@@ -63,11 +80,12 @@ export function CreateProductActionsheet({
           <ProductSubmitError message={errorMessage} />
 
           <VStack className="gap-2">
-            <Button onPress={handleFormSubmit} isDisabled={isSubmitting}>
+            <Button className="h-12 rounded-2xl" onPress={handleFormSubmit} isDisabled={isSubmitting}>
               {isSubmitting ? <ButtonSpinner /> : null}
               <ButtonText>{isSubmitting ? "Salvando..." : "Salvar produto"}</ButtonText>
             </Button>
             <Button
+              className="h-12 rounded-2xl"
               variant="outline"
               action="secondary"
               onPress={onClose}

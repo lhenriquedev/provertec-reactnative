@@ -186,13 +186,13 @@ const buttonTextStyle = tva({
       variant: 'outline',
       action: 'positive',
       class:
-        'text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500',
+        'text-success-700 data-[hover=true]:text-success-700 data-[active=true]:text-success-800',
     },
     {
       variant: 'outline',
       action: 'negative',
       class:
-        'text-primary-500 data-[hover=true]:text-primary-500 data-[active=true]:text-primary-500',
+        'text-error-700 data-[hover=true]:text-error-700 data-[active=true]:text-error-800',
     },
   ],
 });

@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Alert, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
+import { Box } from "@/src/components/ui/box";
 import { Button, ButtonText } from "@/src/components/ui/button";
 import { Heading } from "@/src/components/ui/heading";
+import { HStack } from "@/src/components/ui/hstack";
 import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
 import { CreateProductActionsheet } from "@/src/features/products/components/CreateProductActionsheet";
+import { DeleteProductAlertDialog } from "@/src/features/products/components/DeleteProductAlertDialog";
 import { EditProductActionsheet } from "@/src/features/products/components/EditProductActionsheet";
 import { ProductList } from "@/src/features/products/components/ProductList";
 import { useProducts } from "@/src/features/products/hooks/useProducts";
@@ -18,6 +20,9 @@ import type {
 import { useStoreDetails } from "@/src/features/stores/hooks/useStores";
 import { EmptyState } from "@/src/shared/components/EmptyState";
 import { LoadingSpinner } from "@/src/shared/components/LoadingSpinner";
+import { MetricCard } from "@/src/shared/components/MetricCard";
+import { RetailBadge } from "@/src/shared/components/RetailBadge";
+import { formatCurrency } from "@/src/shared/utils/formatCurrency";
 
 import { getStoreErrorMessage } from "@/src/domain/stores/get-store-error-message";
 
@@ -33,9 +38,15 @@ export function StoreProductsScreen() {
   } = useProducts({ storeId });
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
 
   const store = storeQuery.data;
   const products = productsQuery.data ?? [];
+  const averagePrice =
+    products.length > 0
+      ? products.reduce((total, product) => total + product.price, 0) / products.length
+      : 0;
+  const premiumProduct = [...products].sort((left, right) => right.price - left.price)[0];
 
   const handleCreate = async (values: ProductInput) => {
     await createProductMutation.mutateAsync(values);
@@ -54,25 +65,24 @@ export function StoreProductsScreen() {
   };
 
   const confirmDelete = (product: Product) => {
-    Alert.alert("Excluir produto", `Deseja excluir ${product.name}?`, [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Excluir",
-        style: "destructive",
-        onPress: () => {
-          void deleteProductMutation.mutateAsync(product.id);
-        },
-      },
-    ]);
+    setDeletingProduct(product);
+  };
+
+  const handleDelete = async () => {
+    if (!deletingProduct) return;
+
+    await deleteProductMutation.mutateAsync(deletingProduct.id);
+    deleteProductMutation.reset();
+    setDeletingProduct(null);
   };
 
   if (storeQuery.isLoading || productsQuery.isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner label="Carregando o catalogo da loja" />;
   }
 
   if (storeQuery.isError || !store) {
     return (
-      <View style={{ flex: 1, padding: 20 }}>
+      <Box className="flex-1 bg-background-0 px-5 py-5">
         <EmptyState
           title="Loja nao encontrada"
           description={
@@ -83,13 +93,13 @@ export function StoreProductsScreen() {
           actionLabel="Voltar para lojas"
           onAction={() => router.replace("/stores")}
         />
-      </View>
+      </Box>
     );
   }
 
   if (productsQuery.isError) {
     return (
-      <View style={{ flex: 1, padding: 20 }}>
+      <Box className="flex-1 bg-background-0 px-5 py-5">
         <EmptyState
           title="Erro ao carregar produtos"
           description="Nao foi possivel carregar os produtos desta loja."
@@ -98,25 +108,53 @@ export function StoreProductsScreen() {
             void productsQuery.refetch();
           }}
         />
-      </View>
+      </Box>
     );
   }
 
   return (
     <>
-      <View style={{ flex: 1, padding: 20 }}>
+      <Box className="flex-1 bg-background-0 px-5 py-5">
         <VStack className="flex-1 gap-4">
-          <VStack className="gap-1">
-            <Text className="text-typography-600" size="sm">
-              Produtos da loja
-            </Text>
-            <Heading size="xl">{store.name}</Heading>
-            <Text size="sm">{store.address}</Text>
-          </VStack>
+          <Box className="rounded-[32px] border border-tertiary-300 bg-tertiary-100 px-5 py-6">
+            <VStack className="gap-5">
+              <VStack className="gap-2">
+                <HStack className="flex-wrap gap-2">
+                  <RetailBadge label="Produtos da loja" tone="accent" />
+                  <RetailBadge
+                    label={`${products.length} itens`}
+                    tone={products.length > 0 ? "success" : "warning"}
+                  />
+                </HStack>
+                <Heading size="xl">{store.name}</Heading>
+                <Text className="text-typography-700" size="sm">
+                  {store.address}
+                </Text>
+              </VStack>
 
-          <Button onPress={() => setIsCreateOpen(true)}>
-            <ButtonText>Novo produto</ButtonText>
-          </Button>
+              <Button onPress={() => setIsCreateOpen(true)}>
+                <ButtonText>Novo produto</ButtonText>
+              </Button>
+            </VStack>
+          </Box>
+
+          <HStack className="flex-wrap gap-3">
+            <MetricCard
+              title="Itens ativos"
+              value={String(products.length)}
+              helper="Quantidade atual de produtos cadastrados nesta unidade"
+              badge="mix"
+              tone="accent"
+              className="min-w-[48%]"
+            />
+            <MetricCard
+              title="Preco medio"
+              value={formatCurrency(averagePrice)}
+              helper={premiumProduct ? `${premiumProduct.name} lidera o ticket` : "Sem preco medio calculado"}
+              badge="ticket"
+              className="min-w-[48%]"
+            />
+          </HStack>
 
           {deleteProductMutation.error ? (
             <Text className="text-error-700" size="sm">
@@ -124,7 +162,7 @@ export function StoreProductsScreen() {
             </Text>
           ) : null}
 
-          <View style={{ flex: 1 }}>
+          <Box className="flex-1">
             {products.length === 0 ? (
               <EmptyState
                 title="Nenhum produto nesta loja"
@@ -142,13 +180,13 @@ export function StoreProductsScreen() {
                 onDelete={confirmDelete}
               />
             )}
-          </View>
+          </Box>
 
           <Button variant="link" action="secondary" onPress={() => router.back()}>
             <ButtonText>Voltar para loja</ButtonText>
           </Button>
         </VStack>
-      </View>
+      </Box>
 
       <CreateProductActionsheet
         storeId={store.id}
@@ -171,6 +209,17 @@ export function StoreProductsScreen() {
           setEditingProduct(null);
         }}
         onSubmit={handleEdit}
+      />
+
+      <DeleteProductAlertDialog
+        product={deletingProduct}
+        isDeleting={deleteProductMutation.isPending}
+        errorMessage={deleteProductMutation.error ? "Nao foi possivel excluir o produto." : null}
+        onClose={() => {
+          deleteProductMutation.reset();
+          setDeletingProduct(null);
+        }}
+        onConfirm={handleDelete}
       />
     </>
   );
