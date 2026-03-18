@@ -1,7 +1,7 @@
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
-import { useProductsQuery } from "@/src/domain/products/queries";
-import { useStoresQuery } from "@/src/domain/stores/queries";
+import { useProductsQuery } from "@/src/features/products/queries/queries";
+import { useStoresQuery } from "@/src/features/stores/queries/queries";
 
 export default function HomeScreen() {
   const storesQuery = useStoresQuery();

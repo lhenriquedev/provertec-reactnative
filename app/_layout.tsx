@@ -5,8 +5,8 @@ import "react-native-reanimated";
 
 import "@/global.css";
 import { GluestackUIProvider } from "@/src/components/ui/gluestack-ui-provider";
+import { initializeMockServer } from "@/src/mocks/server";
 import { queryClient } from "@/src/infra/queryClient";
-import { initializeMockServer } from "@/src/server";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 export const unstable_settings = {
