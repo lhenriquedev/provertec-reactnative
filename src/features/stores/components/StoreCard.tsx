@@ -9,6 +9,7 @@ import { Text } from "@/src/components/ui/text";
 import { VStack } from "@/src/components/ui/vstack";
 import type { Store } from "@/src/features/stores/types/store.types";
 import { RetailBadge } from "@/src/shared/components/RetailBadge";
+import { useProducts } from "../../products/hooks/useProducts";
 
 type StoreCardProps = {
   store: Store;
@@ -23,13 +24,16 @@ export function StoreCard({
   onEdit,
   onDelete,
 }: StoreCardProps) {
+  const { productsQuery } = useProducts({ storeId: store.id });
+  const products = productsQuery.data ?? [];
+
   return (
     <Box className="rounded-md border border-outline-200 bg-background-50 p-4">
       <VStack className="gap-4">
         <HStack className="items-start justify-between gap-3">
           <VStack className="flex-1 gap-2">
             <RetailBadge
-              label={`${store.productsCount} produtos`}
+              label={`${products.length} produtos`}
               tone="accent"
               className="self-start border-tertiary-200 bg-tertiary-100"
               textClassName="normal-case font-semibold tracking-normal text-tertiary-700"

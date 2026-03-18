@@ -209,7 +209,7 @@ export function StoreDetailScreen() {
 
                       <HStack className="flex-wrap gap-2">
                         <RetailBadge
-                          label={`${store.productsCount} produtos cadastrados`}
+                          label={`${products.length} produtos cadastrados`}
                           tone="accent"
                           className="border-tertiary-200 bg-tertiary-100"
                           textClassName="normal-case tracking-normal"
